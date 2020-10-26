@@ -16,6 +16,63 @@ const discoveryDocs = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3
 // included, separated by spaces.
 const scope = "https://www.googleapis.com/auth/calendar.readonly";
 
+export function transformEvent(event) {
+  const start = dayjs(event.start.date ?? event.start.dateTime);
+  const end = dayjs(event.end.date ?? event.end.dateTime);
+
+  const differentDays = start.day() !== end.day();
+  const diff = Math.round(end.diff(start, 'day', true));
+  const allDay = !!event.start.date && !!event.end.date
+
+  // We can probably do away with this branch somehow, need a bit of time to think about it.
+  if (differentDays) {
+    const length = diff + 1;
+    return new Array(length)
+      .fill(start)
+      .map((day, i) => {
+
+        let eventStart;
+        let eventEnd;
+
+        if (allDay) {
+          eventStart = start.add(i, 'day').startOf('day');
+          eventEnd = start.add(i, 'day').endOf('day');
+        } else {
+          eventStart = i === 0 ? start : start.add(i, 'day').startOf('day');
+          eventEnd = i === length - 1 ? end : start.add(i, 'day').endOf('day');
+        }
+
+        return {
+          id: event.id,
+          allDay: allDay,
+          name: event.summary,
+          start: eventStart,
+          end: eventEnd,
+        }
+      });
+  } else {
+
+    return [
+      {
+        id: event.id,
+        name: event.summary,
+        allDay: allDay,
+        start: allDay ? start.startOf('day') : start,
+        end: allDay ? start.endOf('day') : end,
+      }
+    ];
+  }
+}
+
+export function transformCalendar(calendar) {
+  return {
+    id: calendar.id,
+    name: calendar.summary,
+    color: calendar.backgroundColor,
+    timeZone: calendar.timeZone,
+  }
+}
+
 export class Google extends AbstractClient {
 
   name = 'Google';
@@ -79,34 +136,13 @@ export class Google extends AbstractClient {
       'orderBy': 'startTime'
     });
 
-    // Map to layout concerns events
-    const events = response.result.items.map((event) => ({
-      id: event.id,
-      name: event.summary,
-      allDay: !!event.start.date & !!event.end.date,
-      start: dayjs(event.start.date ?? event.start.dateTime),
-      end: dayjs(event.end.date ?? event.end.dateTime),
-    }));
-
-
-    console.log(JSON.stringify(response.result.items, null, 2));
-
-    Log.info(`Found ${events.length} for calendar id:${calendar.id}`);
-
-    return {...calendar, isLoaded: true, events};
+    return {...calendar, isLoaded: true, events: response.result.items.map(transformEvent).flat()};
   }
 
   async loadCalendars() {
     const response = await window.gapi.client.calendar.calendarList.list();
-
-    this.calendars = response.result.items
-      .map((calendar) => ({
-        id: calendar.id,
-        name: calendar.summary,
-        color: calendar.backgroundColor,
-      }));
-
-    return this.calendars;
+    console.log(JSON.stringify(response.result.items, null, 2));
+    return this.calendars = response.result.items.map(transformCalendar);
   }
 
   async load() {
