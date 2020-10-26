@@ -41,11 +41,12 @@ function Calendar() {
                     className={`rdy-calendar__main-header-day ${isToday ? 'rdy-calendar__main-header-day--today' : ''}`}
                   >
                     <span className="day-of-month">{day.format('D')}</span>
-                    {day.format('dddd')}
+                    <span className="day-of-week">{day.format('dddd')}</span>
                   </div>
                 )
               })
           }
+          <div className="rdy-calendar__main-header-scroll-spacer"></div>
         </div>
         <div className="rdy-calendar__body">
           <div className="rdy-calendar__body-y-axis">

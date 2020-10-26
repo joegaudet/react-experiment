@@ -1,9 +1,18 @@
 $grey: #F5F4F1;
 
-html, body, #root, .rdy-app {
+html, body, #root {
   background-color: $grey;
   height: 100%;
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
 .rdy-app {
+  flex: 1;
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1fr 11fr;
 }

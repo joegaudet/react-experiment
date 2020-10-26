@@ -4,8 +4,9 @@ $radius: 20px;
 .rdy-calendar {
   display: grid;
   grid-template-columns: 1fr 8fr;
-  height: 100%;
+  flex: 1;
   padding: 20px;
+  overflow: hidden;
 
   &__selector {
 
@@ -24,7 +25,7 @@ $radius: 20px;
 
     &-header {
       display: grid;
-      grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 14px;
       border-radius: 8px;
       grid-gap: 1px;
       border-bottom: 1px solid $grey;
@@ -32,6 +33,10 @@ $radius: 20px;
       z-index: 2;
 
       &-y-axis-spacer {
+        background-color: white;
+      }
+
+      &-scroll-spacer {
         background-color: white;
       }
 
@@ -46,6 +51,10 @@ $radius: 20px;
           font-size: 32px;
           margin: 6px;
           padding: 6px;
+        }
+
+        .day-of-week {
+          text-overflow: ellipsis;
         }
 
         &--today {
