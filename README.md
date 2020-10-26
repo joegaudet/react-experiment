@@ -2,15 +2,41 @@
 
 This application connects to your calendar, displays some events.
 
-## General Design Ides
+## Boot
+
+```yarn run start```
+
+## Connect to google
+
+Press the authorize button, profit.
+
+## General Design Ideas
 
 ### Api Abstractions
 
+Design Goal 1: Calendar back ends should be pluggable, so we have a general purpose object that should speak in a uniform
+interface that the calendar can understand. Subclasses are registered with the API registry, where they can be use
+
+#### Outstanding work
+
+- Schema of RdyCalendar and RdyEvent needs to be more clearly specified
+- API access should be made lazy, currently all events are loaded at the outset, obviously this is less than idea
+- Transformations between google events, and nicely rendered events needs to be finished, and covered.
+    - Currently Missing:
+        - Multiday events need to be split for rendering propoerly
+        - Fullday events don't work correctly
 
 ### Calendar Design
 
-Calendar design is fairly straightforward, it makes use of CSS grid to layout the calendar.
+The calendar is laid out with a css grid. There's a base grid of 7 24 blocks, overlaid with one 7 x 96 15 minute blocks per
+calender.
 
+####  Outstanding work
+
+- [ ] Test coverage for meaningful components, granted there's not much state inside of the components
+- [ ] Some bad formatting on days
+- [ ] Event overlap in the same calendar, and across calendars,  needs to be considered, an efficient way of computing intersection would be handy.
+- [ ] Include the fonts.
 
 # Create React App stuff below
 

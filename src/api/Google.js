@@ -62,24 +62,25 @@ export class Google extends AbstractClient {
     window.gapi.auth2.getAuthInstance().signOut();
   }
 
-  _events;
-  _calendars;
-
-  async events() {
-    if (this._events) {
-      return this._events;
+  async loadEvents(calendar) {
+    if (calendar.isLoaded) {
+      return calendar;
     }
+
+    Log.info(`Loading events for calendar id:${calendar.id}`);
+
     const response = await window.gapi.client.calendar.events.list({
-      'calendarId': 'primary',
+      'calendarId': calendar.id,
       'timeMin': (new Date()).toISOString(),
+      'timeMax': dayjs().add(7, 'day').toDate().toISOString(),
       'showDeleted': false,
       'singleEvents': true,
-      'maxResults': 10,
+      'maxResults': 20,
       'orderBy': 'startTime'
     });
 
     // Map to layout concerns events
-    this._events = response.result.items.map((event) => ({
+    const events = response.result.items.map((event) => ({
       id: event.id,
       name: event.summary,
       allDay: !!event.start.date & !!event.end.date,
@@ -87,31 +88,37 @@ export class Google extends AbstractClient {
       end: dayjs(event.end.date ?? event.end.dateTime),
     }));
 
-    return this._events;
+    Log.info(`Found ${events.length} for calendar id:${calendar.id}`);
+
+    return {...calendar, isLoaded: true, events};
   }
 
-
-  async calendars() {
-    if (this._calendars) {
-      return this._calendars;
-    }
-
+  async loadCalendars() {
     const response = await window.gapi.client.calendar.calendarList.list();
 
-    JSON.stringify(response, null, 2)
+    this.calendars = response.result.items
+      .map((calendar) => ({
+        id: calendar.id,
+        name: calendar.summary,
+        color: calendar.backgroundColor,
+      }));
 
-    this._calendars = response.result.items.map((calendar) => ({
-      id: calendar.id,
-      name: calendar.summary,
-      color: calendar.backgroundColor,
-    }));
-
-    return this._calendars;
+    return this.calendars;
   }
 
-  _updateAuthenticatedStatus = (isSignedIn) => {
-    this.isAuthorized = isSignedIn;
-    this.notifyAuthListeners(isSignedIn);
+  async load() {
+    const calendars = await this.loadCalendars()
+    this.calendars = await Promise.all(calendars.map((calendar) => this.loadEvents(calendar)));
+  }
+
+  _updateAuthenticatedStatus = async (isAuthorized) => {
+
+    if (isAuthorized) {
+      await this.load();
+    }
+
+    this.isAuthorized = isAuthorized;
+    this.notifyAuthListeners(isAuthorized);
   }
 
 }

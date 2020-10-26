@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import './Calendar.scss';
 import dayjs from 'dayjs';
-import { API } from './api/Api';
 
-function Day(events) {
-  return <div></div>;
-}
 
-function Event({event}) {
-  // TODO test this bizzo
+function Event({event, calendar}) {
   const day = event.start.day();
   const startMinute = Math.round(event.start.minute() / 15);
   const endMinute = Math.round(event.end.minute() / 15);
 
-  let gridRowStart = dayjs(event.start).hour() * 4 + startMinute + 1;
-  let gridRowEnd = dayjs(event.end).hour() * 4 + endMinute + 1;
+  let gridRowStart;
+  let gridRowEnd;
+
   if (event.allDay) {
     gridRowStart = 1;
+    // 24 hours * 4 15 minute blocks + 1 offet
     gridRowEnd = 24 * 4 + 1;
   } else {
     gridRowStart = event.start.hour() * 4 + startMinute + 1;
@@ -29,6 +26,7 @@ function Event({event}) {
       style={{
         gridColumnStart: day + 1,
         gridColumnEnd: day + 2,
+        backgroundColor: calendar.color,
         gridRowStart, gridRowEnd
       }}
     >
@@ -45,40 +43,26 @@ function Event({event}) {
   );
 }
 
-function Events({events}) {
+function CalendarEvents({calendar}) {
   return (
     <div className="rdy-calendar__events">
-      {events.map(event => <Event event={event} keu={event.id}/>)}
+      {(calendar.events ?? []).map(event => <Event event={event} calendar={calendar} keu={event.id}/>)}
     </div>
   );
 }
 
-function Calendar() {
-  const [events, setEvents] = useState([]);
+function Calendar({clients}) {
   const [calendars, setCalendars] = useState([]);
-  const [selectedCalendars, setSelectedCalendars] = useState([]);
-
-
-  // Generify this
-  async function load() {
-    setCalendars(await API.registry['Google'].calendars())
-    setEvents(await API.registry['Google'].events());
-  }
-
-  load();
 
   function isSelected(calendar) {
-    return selectedCalendars.includes(calendar);
+    return calendars.includes(calendar);
   }
 
   function toggleCalendar(calendar) {
-    console.log('Toggle? ' + calendar.name);
-    console.log('Toggle? ' + isSelected(calendar));
-
     if (isSelected(calendar)) {
-      setSelectedCalendars(selectedCalendars.filter(_ => _ !== calendar));
+      setCalendars(calendars.filter((_) => _.id !== calendar.id));
     } else {
-      setSelectedCalendars([...selectedCalendars, calendar]);
+      setCalendars([...calendars, calendar]);
     }
   }
 
@@ -94,28 +78,41 @@ function Calendar() {
           Calendars
         </h2>
         <ul>
-          {
-            calendars.map((calendar) => {
-              console.log(`${calendar.name} Is Selected: ${isSelected(calendar)}`)
-              return (
-                <li key={calendar.id}>
-                  <button
-                    className={isSelected(calendar) ? 'active' : 'inactive'}
-                    onClick={() => toggleCalendar(calendar)}
-                  >
-                    <span style={{backgroundColor: calendar.color}}></span>
-                    {calendar.name}
-                  </button>
+          {clients.map(
+            (client) => (
+              <>
+                <li>
+                  <h3>{client.name}</h3>
                 </li>
-              )
-            })
+                <li>
+                  <ul>
+                    {
+                      client
+                        .calendars
+                        .map(
+                          (calendar) =>
+                            (
+                              <li key={calendar.id}>
+                                <button
+                                  className={isSelected(calendar) ? 'active' : 'inactive'}
+                                  onClick={() => toggleCalendar(calendar)}
+                                >
+                                  <span style={{backgroundColor: calendar.color}}></span>
+                                  {calendar.name}
+                                </button>
+                              </li>
+                            )
+                        )
+                    }
+                  </ul>
+                </li>
+              </>
+            )
+          )
           }
         </ul>
       </div>
       <div className="rdy-calendar__main">
-        <div>
-
-        </div>
         <div className="rdy-calendar__main-header">
           <div className="rdy-calendar__main-header-y-axis-spacer"></div>
           {
@@ -177,7 +174,10 @@ function Calendar() {
                   })
               }
             </div>
-            <Events events={events}/>
+
+            {
+              calendars.map((calendar) => <CalendarEvents key={calendar.id} calendar={calendar}/>)
+            }
           </div>
         </div>
       </div>

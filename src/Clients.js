@@ -38,14 +38,14 @@ function Client({client}) {
   );
 }
 
-function Clients() {
+function Clients({clients}) {
   return (
     <div>
       <h2>
         Calendar Clients
       </h2>
       <ul>
-        {API.clients.map((client) => <Client client={client} key={client.name}/>)}
+        {clients.map((client) => <Client client={client} key={client.name}/>)}
       </ul>
     </div>
   );

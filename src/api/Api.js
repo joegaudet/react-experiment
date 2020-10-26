@@ -5,7 +5,7 @@ export class AbstractClient {
 
   name;
   isAuthorized = false;
-  listeners = [];
+  authorizationListeners = [];
 
   async init() {
     throw `Init not implemented in ${this.name}`;
@@ -19,26 +19,30 @@ export class AbstractClient {
     throw `revokeAuthorization not implemented in ${this.name}`;
   }
 
-  /** @return {Promise<RdyEvent>} */
-  async events() {
-    throw `events not implemented in ${this.name}`;
+  async load(calendarId) {
+    throw `load not implemented in ${this.name}`;
   }
 
   /** @return {Promise<RdyEvent>} */
-  async calendars() {
+  async loadEvents(calendarId) {
+    throw `events not implemented in ${this.name}`;
+  }
+
+  /** @return {Promise<RdyCalendar>} */
+  async loadCalendars() {
     throw `events not implemented in ${this.name}`;
   }
 
   notifyAuthListeners(value) {
-    this.listeners.forEach(_ => _(value));
+    this.authorizationListeners.forEach(_ => _(value));
   }
 
   subscribeToAuthStatus(func) {
-    this.listeners.push(func);
+    this.authorizationListeners.push(func);
   }
 
   unsubscribeFromAuthStatus(func) {
-    this.listeners = this.listeners.filter(_ => _ !== func);
+    this.authorizationListeners = this.authorizationListeners.filter(_ => _ !== func);
   }
 
 }
