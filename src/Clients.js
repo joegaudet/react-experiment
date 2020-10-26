@@ -24,13 +24,13 @@ function Client({client}) {
   return (
     isAuthorized
       ? (
-        <li key={client.name}>
+        <li>
           <p>{client.name} - Authorized</p>
           <button onClick={() => client.revokeAuthorization()}>Sign Out</button>
         </li>
       )
       : (
-        <li key={client.name}>
+        <li>
           <p>{client.name} - Unauthorized</p>
           <button onClick={() => client.authorize()}>Authorize</button>
         </li>
@@ -41,7 +41,7 @@ function Client({client}) {
 function Clients() {
   return (
     <ul>
-      {API.clients.map((client) => <Client client={client}/>)}
+      {API.clients.map((client) => <Client client={client} key={client.name}/>)}
     </ul>
   );
 }
