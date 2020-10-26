@@ -15,20 +15,20 @@ Press the authorize button, profit.
 ### Api Abstractions
 
 Design Goal 1: Calendar back ends should be pluggable, so we have a general purpose object that should speak in a uniform
-interface that the calendar can understand. Subclasses are registered with the API registry, where they can be use
+interface that the calendar can understand. Subclasses are registered with the API registry, where they can be used more
+or less anonymously.
 
 #### Outstanding work
 
-- Schema of RdyCalendar and RdyEvent needs to be more clearly specified
-- API access should be made lazy, currently all events are loaded at the outset, obviously this is less than idea
-- Transformations between google events, and nicely rendered events needs to be finished, and covered.
-    - Currently Missing:
-        - Multiday events need to be split for rendering propoerly
-        - Fullday events don't work correctly
+- [ ] Schema of RdyCalendar and RdyEvent needs to be specified/typed
+- [ ] API access should be made lazy, currently all events are loaded at the outset, obviously this is less than idea
+- [ ] Transformations between google events, and nicely rendered events needs to be finished, and covered.
+    - [ ] Multiday events need to be split for rendering propoerly
+    - [ ]Fullday events don't work correctly
 
 ### Calendar Design
 
-The calendar is laid out with a css grid. There's a base grid of 7 24 blocks, overlaid with one 7 x 96 15 minute blocks per
+The calendar is laid out with a css grid. There's a base grid of 7 x 24hr blocks, overlaid with one 7 x 96 15min blocks per
 calender.
 
 ####  Outstanding work
