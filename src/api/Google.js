@@ -88,6 +88,9 @@ export class Google extends AbstractClient {
       end: dayjs(event.end.date ?? event.end.dateTime),
     }));
 
+
+    console.log(JSON.stringify(response.result.items, null, 2));
+
     Log.info(`Found ${events.length} for calendar id:${calendar.id}`);
 
     return {...calendar, isLoaded: true, events};
