@@ -24,6 +24,11 @@ export class AbstractClient {
     throw `events not implemented in ${this.name}`;
   }
 
+  /** @return {Promise<RdyEvent>} */
+  async calendars() {
+    throw `events not implemented in ${this.name}`;
+  }
+
   notifyAuthListeners(value) {
     this.listeners.forEach(_ => _(value));
   }
@@ -44,11 +49,6 @@ export class API {
     Log.info('API: Bootstrap')
     // initialize any registered clients
     await Promise.all(this.clients.map(_ => _.init()));
-  }
-
-  static async authorize() {
-    // initialize any registered clients
-    await Promise.all(this.clients.map(_ => _.authorize()));
   }
 
   static registry = {};

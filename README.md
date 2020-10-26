@@ -1,3 +1,19 @@
+# React Experiment
+
+This application connects to your calendar, displays some events.
+
+## General Design Ides
+
+### Api Abstractions
+
+
+### Calendar Design
+
+Calendar design is fairly straightforward, it makes use of CSS grid to layout the calendar.
+
+
+# Create React App stuff below
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

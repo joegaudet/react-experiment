@@ -1,22 +1,82 @@
 $grey: #F5F4F1;
+$dark-grey: #929292;
 $radius: 20px;
 
 .rdy-calendar {
   display: grid;
-  grid-template-columns: 1fr 8fr;
+  grid-template:
+          "header header header header header header header header"
+          "selector main  main main main main main main"
+          "footer footer footer footer footer footer footer footer";
+
   flex: 1;
-  padding: 20px;
   overflow: hidden;
+  border-left: 1px solid $dark-grey;
+  grid-gap: 20px;
+
+  &__header {
+    grid-area: header;
+    color: grey;
+    border-bottom: 1px solid $dark-grey;
+    padding: 10px 20px;
+
+    h1 {
+      font-size: 24px;
+      font-weight: 300;
+      margin: 0;
+    }
+  }
+
+  &__footer {
+    grid-area: footer;
+  }
 
   &__selector {
+    grid-area: selector;
+    padding: 20px;
 
     h2 {
+      font-size: 16px;
       text-transform: uppercase;
+      margin: 0;
+    }
+
+    ul {
+      padding: 0;
+    }
+
+    li {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      padding: 4px;
+
+      button {
+        padding: 4px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        text-align: left;
+
+        &.active {
+          background-color: white;
+          border-radius: 5px;
+        }
+      }
+
+      span {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 100%;
+        margin-right: 16px;
+      }
     }
 
   }
 
   &__main {
+    grid-area: main;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -69,10 +129,14 @@ $radius: 20px;
   }
 
   &__body {
-    display: flex;
     position: relative;
     z-index: 1;
     overflow-y: auto;
+
+    &-container {
+      display: flex;
+      position: relative;
+    }
 
     &-y-axis {
       width: 100px;
@@ -87,7 +151,7 @@ $radius: 20px;
         display: grid;
         grid-template-rows: repeat(24, 100px);
         background-color: white;
-        color: #929292;
+        color: $dark-grey;
         padding-right: 10px;
         text-align: right;
 
@@ -111,7 +175,37 @@ $radius: 20px;
         height: 100px;
       }
     }
-
   }
-}
 
+  &__events {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(24 * 4, 1fr);
+    grid-auto-flow: column;
+    grid-gap: 1px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 100px;
+
+    &-event {
+      border-radius: 8px;
+      background-color: #108476;
+      color: white;
+      padding: 2px 12px;
+      margin-right: 24px;
+
+      h1 {
+        font-size: 16px;
+      }
+
+      h2 {
+        font-size: 12px;
+        font-style: italic;
+        font-weight: 300;
+      }
+    }
+  }
+
+}

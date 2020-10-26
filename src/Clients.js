@@ -40,9 +40,14 @@ function Client({client}) {
 
 function Clients() {
   return (
-    <ul>
-      {API.clients.map((client) => <Client client={client} key={client.name}/>)}
-    </ul>
+    <div>
+      <h2>
+        Calendar Clients
+      </h2>
+      <ul>
+        {API.clients.map((client) => <Client client={client} key={client.name}/>)}
+      </ul>
+    </div>
   );
 }
 

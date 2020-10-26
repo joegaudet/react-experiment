@@ -1,5 +1,6 @@
 import { AbstractClient, API } from './Api';
 import { Log } from '../util/log';
+import dayjs from 'dayjs';
 
 // TODO these should be stored in environment variables to be injected at build time OR should be fetched before application
 // bootstrap
@@ -61,23 +62,51 @@ export class Google extends AbstractClient {
     window.gapi.auth2.getAuthInstance().signOut();
   }
 
+  _events;
+  _calendars;
+
   async events() {
-    const response = window.gapi.client.calendar.events.list({
+    if (this._events) {
+      return this._events;
+    }
+    const response = await window.gapi.client.calendar.events.list({
       'calendarId': 'primary',
-      'timeMin': Date.now().toISOString(),
+      'timeMin': (new Date()).toISOString(),
       'showDeleted': false,
       'singleEvents': true,
       'maxResults': 10,
       'orderBy': 'startTime'
-    })
+    });
 
-    const events = response.result.items;
+    // Map to layout concerns events
+    this._events = response.result.items.map((event) => ({
+      id: event.id,
+      name: event.summary,
+      allDay: !!event.start.date & !!event.end.date,
+      start: dayjs(event.start.date ?? event.start.dateTime),
+      end: dayjs(event.end.date ?? event.end.dateTime),
+    }));
 
-    if (events.length > 0) {
+    return this._events;
+  }
 
-    } else {
-      // appendPre('No upcoming events found.');
+
+  async calendars() {
+    if (this._calendars) {
+      return this._calendars;
     }
+
+    const response = await window.gapi.client.calendar.calendarList.list();
+
+    JSON.stringify(response, null, 2)
+
+    this._calendars = response.result.items.map((calendar) => ({
+      id: calendar.id,
+      name: calendar.summary,
+      color: calendar.backgroundColor,
+    }));
+
+    return this._calendars;
   }
 
   _updateAuthenticatedStatus = (isSignedIn) => {
