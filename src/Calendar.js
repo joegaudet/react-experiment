@@ -2,30 +2,35 @@ import React, { useState } from 'react';
 import './Calendar.scss';
 import dayjs from 'dayjs';
 
+const MINUTES_PER_BLOCK = 15;
+const BLOCKS_PER_HOUR = 60 / MINUTES_PER_BLOCK;
+const HOURS_PER_DAY = 24;
+const GRID_OFFSET = 1;
 
 function Event({event, calendar}) {
   const day = event.start.day();
-  const startMinute = Math.round(event.start.minute() / 15);
-  const endMinute = Math.round(event.end.minute() / 15);
+  const startMinute = Math.round(event.start.minute() / MINUTES_PER_BLOCK);
+  const endMinute = Math.round(event.end.minute() / MINUTES_PER_BLOCK);
 
   let gridRowStart;
   let gridRowEnd;
 
   if (event.allDay) {
     gridRowStart = 1;
-    // 24 hours * 4 15 minute blocks + 1 offet
-    gridRowEnd = 24 * 4 + 1;
+    gridRowEnd = HOURS_PER_DAY * BLOCKS_PER_HOUR + GRID_OFFSET;
   } else {
-    gridRowStart = event.start.hour() * 4 + startMinute + 1;
-    gridRowEnd = event.end.hour() * 4 + endMinute + 1;
+    gridRowStart = event.start.hour() * BLOCKS_PER_HOUR + startMinute + GRID_OFFSET;
+    gridRowEnd = event.end.hour() * BLOCKS_PER_HOUR + endMinute + GRID_OFFSET;
+    ;
   }
 
   return (
     <div
       className="rdy-calendar__events-event"
       style={{
-        gridColumnStart: day + 1,
-        gridColumnEnd: day + 2,
+        // css is 0 indexed, computers are 1 indexed
+        gridColumnStart: day + GRID_OFFSET,
+        gridColumnEnd: day + 1 + GRID_OFFSET,
         backgroundColor: calendar.color,
         gridRowStart, gridRowEnd
       }}
