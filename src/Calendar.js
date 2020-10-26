@@ -21,7 +21,6 @@ function Event({event, calendar}) {
   } else {
     gridRowStart = event.start.hour() * BLOCKS_PER_HOUR + startMinute + GRID_OFFSET;
     gridRowEnd = event.end.hour() * BLOCKS_PER_HOUR + endMinute + GRID_OFFSET;
-    ;
   }
 
   return (
@@ -147,7 +146,6 @@ function Calendar({clients}) {
                 new Array(24)
                   .fill(dayjs().startOf('week'))
                   .map((startOfWeek, i) => {
-                    // not sure if we need this
                     const time = startOfWeek.add(i, 'hour');
 
                     return (
@@ -165,18 +163,14 @@ function Calendar({clients}) {
               {
                 new Array(7 * 24)
                   .fill(dayjs().startOf('week'))
-                  .map((startOfWeek, i) => {
-                    // not sure if we need this
-                    const time = startOfWeek.add(i, 'hour');
-
-                    return (
+                  .map((startOfWeek, i) => (
                       <div
                         key={`day-hour-${i}`}
                         className="rdy-calendar__body-grid-cell"
                       >
                       </div>
                     )
-                  })
+                  )
               }
             </div>
 
