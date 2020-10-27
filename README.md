@@ -41,6 +41,32 @@ calender.
     - [ ] Compute intersection of all calendar events
 - [ ] Include the fonts.
 
+
+## Tests
+
+Admittedly not super familiar with Jest, run the whole suite with the following
+
+```yarn run test a```
+
+or
+
+```yarn run test-suite```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Create React App stuff below
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
