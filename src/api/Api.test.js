@@ -59,4 +59,18 @@ test("Registry", function () {
 
   // apparently you can't have custom messages inside of JEST expects. Normally I would use BDD style for this.
   expect(API.clientFor('mock-client') instanceof MockClient).toBeTruthy();
-})
+});
+
+test('Authorization Subscription', function () {
+  const client = new AbstractClient();
+  let int = 0;
+
+  const mutator = () => int++;
+
+  client.subscribeToAuthStatus(mutator);
+  client.notifyAuthListeners();
+  expect(int).toEqual(1)
+  client.unsubscribeFromAuthStatus(mutator);
+  client.notifyAuthListeners();
+  expect(int).toEqual(1)
+});
