@@ -7,6 +7,7 @@ test("intersection of n events", () => {
   const sut = new RdyCalendar("id", "name", "white", "America/Vancouver", [
     new RdyEvent(
       "id1",
+      0,
       "name",
       dayjs().startOf('day'),
       dayjs().endOf('day'),
@@ -14,6 +15,7 @@ test("intersection of n events", () => {
     ),
     new RdyEvent(
       "id2",
+      0,
       "name",
       dayjs().startOf('day').add(1, 'hour'),
       dayjs().startOf('day').add(4, 'hour'),
@@ -21,6 +23,7 @@ test("intersection of n events", () => {
     ),
     new RdyEvent(
       "id3",
+      0,
       "name",
       dayjs().startOf('day').add(2, 'hour'),
       dayjs().startOf('day').add(6, 'hour'),
@@ -28,6 +31,7 @@ test("intersection of n events", () => {
     ),
     new RdyEvent(
       "id3",
+      0,
       "name",
       dayjs().startOf('day').add(5, 'hour'),
       dayjs().startOf('day').add(6, 'hour'),
@@ -35,6 +39,7 @@ test("intersection of n events", () => {
     ),
     new RdyEvent(
       "id4",
+      0,
       "name",
       dayjs().startOf('day').add(6, 'hour'),
       dayjs().startOf('day').add(8, 'hour'),

@@ -160,6 +160,7 @@ test("test transformation of single day events", () => {
     .toEqual([
       new RdyEvent(
         "_84s30c1i851k8ba16114ab9k64rj6b9p88sjgb9o6p132h228os42ci664",
+        0,
         "Single Day Event",
         dayjs("2020-10-26T15:30:00-07:00"),
         dayjs("2020-10-26T16:15:00-07:00"),
@@ -173,6 +174,7 @@ test("test transformation of multi day events", () => {
     .toEqual([
         new RdyEvent(
           "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          0,
           "Multi Day Event",
           dayjs("2020-10-28T20:00:00-07:00"),
           dayjs("2020-10-28T20:00:00-07:00").endOf("day"),
@@ -180,6 +182,7 @@ test("test transformation of multi day events", () => {
         ),
         new RdyEvent(
           "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          1,
           "Multi Day Event",
           dayjs("2020-10-29T13:30:00-07:00").startOf("day"),
           dayjs("2020-10-29T13:30:00-07:00"),
@@ -194,6 +197,7 @@ test("test transformation of full day events", () => {
     .toEqual([
         new RdyEvent(
           "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          0,
           "All day event",
           dayjs("2020-10-28").startOf("day"),
           dayjs("2020-10-28").endOf("day"),
@@ -208,6 +212,7 @@ test("test transformation of full day multi day events", () => {
     .toEqual([
         new RdyEvent(
           "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          0,
           "Multi Day All day event",
           dayjs("2020-10-28").startOf("day"),
           dayjs("2020-10-28").endOf("day"),
@@ -215,6 +220,7 @@ test("test transformation of full day multi day events", () => {
         ),
         new RdyEvent(
           "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          1,
           "Multi Day All day event",
           dayjs("2020-10-29").startOf("day"),
           dayjs("2020-10-29").endOf("day"),

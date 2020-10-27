@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react';
-import { RdyCalendar, RdyEvent } from './api/Api';
+import { RdyCalendar, RdyEvent } from '../api/Api';
 import dayjs from 'dayjs';
 import { CalendarEvent } from './Calendar';
 
@@ -10,7 +10,7 @@ describe("CalendarEvent", function () {
     const start = dayjs().startOf('week').add(4, 'hour');
     const end = dayjs().startOf('week').add(5, 'hour');
     const calendar = new RdyCalendar("1", "test", "red");
-    const event = new RdyEvent("1", "test", start, end)
+    const event = new RdyEvent("1", 0, "test", start, end)
 
     render(<CalendarEvent calendar={calendar} event={event}/>);
 
@@ -32,7 +32,7 @@ describe("CalendarEvent", function () {
     const start = dayjs().startOf('week');
     const end = dayjs().startOf('week').endOf('day');
     const calendar = new RdyCalendar("1", "test", "red", true);
-    const event = new RdyEvent("1", "test", start, end)
+    const event = new RdyEvent("1", 0, "test", start, end)
 
     render(<CalendarEvent calendar={calendar} event={event}/>);
 
