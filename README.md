@@ -14,6 +14,8 @@ Press the authorize button, profit.
 
 Find attached the main units of the system, layout is mostly performed in CSS as described below.
 
+![UML](https://i.ibb.co/Jzxxx9Q/Screen-Shot-2020-10-27-at-9-28-59-AM.png)
+
 
 ### Api Abstractions
 
