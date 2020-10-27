@@ -12,29 +12,37 @@ Press the authorize button, profit.
 
 ## General Design Ideas
 
+Find attached the main units of the system, layout is mostly performed in CSS as described below.
+
+
 ### Api Abstractions
 
-Design Goal 1: Calendar back ends should be pluggable, so we have a general purpose object that should speak in a uniform
+Calendar back ends should be pluggable, so we have a general purpose object that should speak in a uniform
 interface that the calendar can understand. Subclasses are registered with the API registry, where they can be used more
-or less anonymously.
+or less anonymously. The main downside I encountered to this approach, I forgot that webpack will not include modules
+that are not required anywhere, normally I would load the registry with reflection, but in this case I had to do it manually.
 
 #### Outstanding work
 
 - [x] Schema of RdyCalendar and RdyEvent needs to be specified/typed
-- [ ] API access should be made lazy, currently all events are loaded at the outset, obviously this is less than idea
+- [ ] API access should be made lazy, currently all events are loaded at the outset, obviously this is less than ideal
 - [x] Transformations between google events, and nicely rendered events needs to be finished, and covered.
     - [x] Multiday events need to be split for rendering propoerly
     - [x] Fullday events don't work correctly
 
 ### Calendar Design
 
-The calendar is laid out with a css grid. There's a base grid of 7 x 24hr blocks, overlaid with one 7 x 96 15min blocks per
-calender.
+The calendar is laid out with a css grid. It is composed of the following:
+
+- A 7 day header
+- A Y-Axis with hour markers (excluding midnight on either night).
+- A background grid composed of 7 x 24hr blocks
+
 
 ####  Outstanding work
 
-- [ ] Test coverage for meaningful components, granted there's not appart from state inside of the components
-    - [ ] Cover the event component since it does some math
+- [x] Test coverage for meaningful components
+    - [x] Cover the event component since it does some math
 - [x] Some bad formatting on days
 - [ ] Event Intersection
     - [x] Compute intersection of calendar local events

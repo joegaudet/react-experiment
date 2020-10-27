@@ -1,6 +1,9 @@
 // if we were in TypeScript this would maybe be an interface
 import { Log } from '../util/log';
 
+/**
+ * @class Container for an event that can be rendered by the calendar
+ */
 export class RdyEvent {
   id;
   name;
@@ -8,10 +11,10 @@ export class RdyEvent {
   end;
   allDay;
   localIntersectionIndex = 0;
-  globalCalendarEventOffset;
 
-  constructor(id, name, start, end, allDay) {
+  constructor(id, index, name, start, end, allDay) {
     this.id = id;
+    this.index = index;
     this.name = name;
     this.start = start;
     this.end = end;
@@ -29,8 +32,15 @@ export class RdyEvent {
 
     return this._intersectionKeys;
   }
+
+  get key() {
+    return `${this.id}-${this.index}`
+  }
 }
 
+/**
+ * @class A colllection of events from a calendar source
+ */
 export class RdyCalendar {
 
   /** @type {string} **/
@@ -113,7 +123,7 @@ export class AbstractClient {
   isAuthorized = false;
   authorizationListeners = [];
 
-  async init() {
+  async init(config) {
     throw `Init not implemented in ${this.name}`;
   }
 
@@ -155,24 +165,46 @@ export class AbstractClient {
 
 export class API {
 
-  static async bootstrap() {
-    Log.info('API: Bootstrap')
-    // initialize any registered clients
-    await Promise.all(this.clients.map(_ => _.init()));
-  }
 
   static registry = {};
 
+  /**
+   * Initializes any registered clients
+   *
+   * @parm Object config
+   * @return {Promise<void>}
+   */
+  static async bootstrap(config = {}) {
+    Log.info('API: Bootstrap')
+    // initialize any registered clients
+    await Promise.all(this.clients.map(_ => _.init(config)));
+  }
+
+  /**
+   * Register an API client with the registry.
+   *
+   * @param {Class<APIClient>}clientClass
+   */
   static registerClient(clientClass) {
     // TODO in the future we would probably load env config from here.
     const client = new clientClass({});
     this.registry[client.name] = client;
   }
 
+  /**
+   * All active clients
+   *
+   * @return {ApiClient[]}
+   */
   static get clients() {
     return Object.values(this.registry);
   }
 
+  /**
+   * A single client
+   *
+   * @return {ApiClient}
+   */
   static clientFor(name) {
     return this.registry[name];
   }

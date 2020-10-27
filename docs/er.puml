@@ -1,0 +1,87 @@
+@startuml
+
+hide empty members
+
+package api {
+    class API {
+     + registry: Map<string, ApiClient>
+     init():void
+     loadCalendars():RdyCalendar[];
+     loadEvents(calendar:RdyCalendar)RdyEvent[];
+    }
+
+    class Google  {
+
+    }
+
+    class Microsoft {
+
+    }
+
+    class Apple {
+
+    }
+
+    API <|-- Google
+    API <|-- Microsoft
+    API <|-- Apple
+
+
+
+    class RdyCalendar {
+        id:string
+        name:string
+        start:DayJs
+        end:DayJs
+        allDay:boolean
+        localIntersectionIndex:int
+    }
+
+    class RdyEvent {
+        id:string
+        name:string
+        color:string
+        timeZone:string
+        events:RdyEvent[]
+    }
+
+    RdyCalendar --o RdyEvent
+}
+
+package ui {
+
+    class Calendar {
+
+    }
+
+    class CalendarEvents {
+
+    }
+
+    class CalendarEvent {
+
+    }
+
+    class Grid {
+
+    }
+
+    class Header {
+
+    }
+
+    class YAxis {
+
+    }
+
+    Calendar -- Header
+    Calendar -- YAxis
+    Calendar -- Grid
+    Calendar --o  CalendarEvents
+    CalendarEvents --o  CalendarEvent
+
+
+
+}
+
+@enduml

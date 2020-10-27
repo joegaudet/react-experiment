@@ -1,4 +1,4 @@
-import { AbstractClient, API, RdyCalendar, RdyEvent } from './Api';
+import { AbstractClient, RdyCalendar, RdyEvent } from './Api';
 import { Log } from '../util/log';
 import dayjs from 'dayjs';
 
@@ -44,16 +44,18 @@ export function transformEvent(event) {
 
         return new RdyEvent(
           event.id,
+          i,
           event.summary,
           eventStart,
           eventEnd,
-          allDay
+          allDay,
         )
       });
   } else {
     return [
       new RdyEvent(
         event.id,
+        0,
         event.summary,
         allDay ? start.startOf('day') : start,
         allDay ? start.endOf('day') : end,
@@ -72,24 +74,27 @@ export function transformCalendar(calendar) {
   )
 }
 
-export class Google extends AbstractClient {
+const GLog = Log.child({client: 'google'})
+
+export default class Google extends AbstractClient {
 
   name = 'Google';
 
-  // Theory being that config will be passed in from the main calendar API facade
-  // TODO.
-  constructor(_config) {
-    super();
-  }
+  /**
+   * @override
+   * @param Object config
+   * @return {Promise<void>}
+   */
+  async init(config = {}) {
+    this.config = config;
 
-  async init() {
-    // Initial Load API isn't promise aware
-    return new Promise((resolve, reject) => {
-      Log.info('Initializing Google API Client')
+    // Google init function doesn't return a promise so... promise-ify
+    await new Promise((resolve, reject) => {
+      GLog.info('Initializing Google API Client')
 
       window.gapi.load('client:auth2', async () => {
         try {
-          Log.info('Google API Client Loaded')
+          GLog.info('Google API Client Loaded')
 
           await window.gapi.client.init({apiKey, clientId, discoveryDocs, scope});
 
@@ -99,8 +104,8 @@ export class Google extends AbstractClient {
 
           resolve();
         } catch (e) {
-          Log.error('Error loading Google API Client');
-          Log.error(e);
+          GLog.error('Error loading Google API Client');
+          GLog.error(e);
 
           reject(e);
         }
@@ -109,17 +114,17 @@ export class Google extends AbstractClient {
   }
 
   async authorize() {
-    Log.info('Authorizing Google API Client');
+    GLog.info('Authorizing Google API Client');
     window.gapi.auth2.getAuthInstance().signIn();
   }
 
   async revokeAuthorization() {
-    Log.info('Signing Out ofGoogle API Client');
+    GLog.info('Signing Out ofGoogle API Client');
     window.gapi.auth2.getAuthInstance().signOut();
   }
 
   async loadEvents(calendar) {
-    Log.info(`Loading events for calendar id:${calendar.id}`);
+    GLog.info(`Loading events for calendar id:${calendar.id}`);
 
     const response = await window.gapi.client.calendar.events.list({
       'calendarId': calendar.id,
@@ -136,6 +141,7 @@ export class Google extends AbstractClient {
   }
 
   async loadCalendars() {
+    GLog.info(`[google] Loading Calendars`);
     const response = await window.gapi.client.calendar.calendarList.list();
     return this.calendars = response.result.items.map(transformCalendar);
   }
@@ -156,4 +162,3 @@ export class Google extends AbstractClient {
 
 }
 
-API.registerClient(Google);

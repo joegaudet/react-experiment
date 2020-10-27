@@ -5,8 +5,13 @@ import { API } from './api/Api';
 import { Log } from './util/log';
 
 // WHY THO
-import Clients from './Clients';
-import Calendar from './Calendar';
+import Clients from './ui/Clients';
+import Calendar from './ui/Calendar';
+
+
+// webpack tree shakes this out, so we need to manually import it
+import Google from './api/Google';
+API.registerClient(Google);
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);

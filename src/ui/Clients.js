@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { API } from './api/Api';
-
-// if I don't import this it's not included which is calling into question my registry pattern
-import Google from './api/Google';
 
 function Client({client}) {
   const [isAuthorized, setIsAuthorized] = useState(client.isAuthorized);
