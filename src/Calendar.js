@@ -31,7 +31,11 @@ function Event({event, calendar}) {
         gridColumnStart: day + GRID_OFFSET,
         gridColumnEnd: day + 1 + GRID_OFFSET,
         backgroundColor: calendar.color,
-        gridRowStart, gridRowEnd
+        // move the event left based on it's local intersection index
+        marginLeft: event.localIntersectionIndex * 15,
+        borderSize: event.localIntersectionIndex > 0 ? 1 : 0,
+        gridRowStart,
+        gridRowEnd
       }}
     >
       <h1>
@@ -40,7 +44,7 @@ function Event({event, calendar}) {
       </h1>
       {
         !event.allDay
-          ? <h2>{event.start.format('H:M A')} - {event.start.format('H:M A')}</h2>
+          ? <h2>{event.start.format('h:M A')} - {event.start.format('h:M A')}</h2>
           : null
       }
     </div>
@@ -48,6 +52,13 @@ function Event({event, calendar}) {
 }
 
 function CalendarEvents({calendar}) {
+  const intersectionMap = new Map();
+
+  calendar.events.forEach((event) => {
+
+  });
+
+
   return (
     <div className="rdy-calendar__events">
       {(calendar.events ?? []).map(event => <Event event={event} calendar={calendar} keu={event.id}/>)}

@@ -1,6 +1,7 @@
 import React from "react";
 import { transformCalendar, transformEvent } from "./Google";
 import dayjs from "dayjs";
+import { RdyCalendar, RdyEvent } from './Api';
 
 const singleDayEvent =
   {
@@ -146,44 +147,44 @@ const calendarResponse = {
 
 test("test transformation of calendar", () => {
   expect(transformCalendar(calendarResponse))
-    .toEqual({
-      id: "6bmdlvqal8be0elu24v22jjb58@group.calendar.google.com",
-      name: "Work",
-      color: "#0252d4",
-      timeZone: "America/Edmonton"
-    })
+    .toEqual(new RdyCalendar(
+      "6bmdlvqal8be0elu24v22jjb58@group.calendar.google.com",
+      "Work",
+      "#0252d4",
+      "America/Edmonton"
+    ))
 });
 
 test("test transformation of single day events", () => {
   expect(transformEvent(singleDayEvent))
     .toEqual([
-      {
-        id: "_84s30c1i851k8ba16114ab9k64rj6b9p88sjgb9o6p132h228os42ci664",
-        allDay: false,
-        name: "Single Day Event",
-        start: dayjs("2020-10-26T15:30:00-07:00"),
-        end: dayjs("2020-10-26T16:15:00-07:00"),
-      }
-    ])
+      new RdyEvent(
+        "_84s30c1i851k8ba16114ab9k64rj6b9p88sjgb9o6p132h228os42ci664",
+        "Single Day Event",
+        dayjs("2020-10-26T15:30:00-07:00"),
+        dayjs("2020-10-26T16:15:00-07:00"),
+        false
+      )
+    ]);
 });
 
 test("test transformation of multi day events", () => {
   expect(transformEvent(multiDayEvent))
     .toEqual([
-        {
-          id: "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
-          name: "Multi Day Event",
-          allDay: false,
-          start: dayjs("2020-10-28T20:00:00-07:00"),
-          end: dayjs("2020-10-28T20:00:00-07:00").endOf("day"),
-        },
-        {
-          id: "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
-          name: "Multi Day Event",
-          allDay: false,
-          start: dayjs("2020-10-29T13:30:00-07:00").startOf("day"),
-          end: dayjs("2020-10-29T13:30:00-07:00"),
-        }
+        new RdyEvent(
+          "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          "Multi Day Event",
+          dayjs("2020-10-28T20:00:00-07:00"),
+          dayjs("2020-10-28T20:00:00-07:00").endOf("day"),
+          false
+        ),
+        new RdyEvent(
+          "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          "Multi Day Event",
+          dayjs("2020-10-29T13:30:00-07:00").startOf("day"),
+          dayjs("2020-10-29T13:30:00-07:00"),
+          false
+        )
       ]
     )
 });
@@ -191,13 +192,13 @@ test("test transformation of multi day events", () => {
 test("test transformation of full day events", () => {
   expect(transformEvent(allDayEvent))
     .toEqual([
-        {
-          id: "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
-          name: "All day event",
-          allDay: true,
-          start: dayjs("2020-10-28").startOf("day"),
-          end: dayjs("2020-10-28").endOf("day"),
-        }
+        new RdyEvent(
+          "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          "All day event",
+          dayjs("2020-10-28").startOf("day"),
+          dayjs("2020-10-28").endOf("day"),
+          true
+        )
       ]
     )
 });
@@ -205,20 +206,20 @@ test("test transformation of full day events", () => {
 test("test transformation of full day multi day events", () => {
   expect(transformEvent(multiDayAllDayEvent))
     .toEqual([
-        {
-          id: "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
-          name: "Multi Day All day event",
-          allDay: true,
-          start: dayjs("2020-10-28").startOf("day"),
-          end: dayjs("2020-10-28").endOf("day"),
-        },
-        {
-          id: "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
-          name: "Multi Day All day event",
-          allDay: true,
-          start: dayjs("2020-10-29").startOf("day"),
-          end: dayjs("2020-10-29").endOf("day"),
-        }
+        new RdyEvent(
+          "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          "Multi Day All day event",
+          dayjs("2020-10-28").startOf("day"),
+          dayjs("2020-10-28").endOf("day"),
+          true
+        ),
+        new RdyEvent(
+          "_70q30ga160s3gba46gpkcb9k60pj6ba26spj2ba48l14ahi470sj0c256c",
+          "Multi Day All day event",
+          dayjs("2020-10-29").startOf("day"),
+          dayjs("2020-10-29").endOf("day"),
+          true
+        )
       ]
     )
 });

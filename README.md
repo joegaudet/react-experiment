@@ -20,11 +20,11 @@ or less anonymously.
 
 #### Outstanding work
 
-- [ ] Schema of RdyCalendar and RdyEvent needs to be specified/typed
+- [x] Schema of RdyCalendar and RdyEvent needs to be specified/typed
 - [ ] API access should be made lazy, currently all events are loaded at the outset, obviously this is less than idea
-- [ ] Transformations between google events, and nicely rendered events needs to be finished, and covered.
-    - [ ] Multiday events need to be split for rendering propoerly
-    - [ ]Fullday events don't work correctly
+- [x] Transformations between google events, and nicely rendered events needs to be finished, and covered.
+    - [x] Multiday events need to be split for rendering propoerly
+    - [x] Fullday events don't work correctly
 
 ### Calendar Design
 
@@ -33,9 +33,12 @@ calender.
 
 ####  Outstanding work
 
-- [ ] Test coverage for meaningful components, granted there's not much state inside of the components
-- [ ] Some bad formatting on days
-- [ ] Event overlap in the same calendar, and across calendars,  needs to be considered, an efficient way of computing intersection would be handy.
+- [ ] Test coverage for meaningful components, granted there's not appart from state inside of the components
+    - [ ] Cover the event component since it does some math
+- [x] Some bad formatting on days
+- [ ] Event Intersection
+    - [x] Compute intersection of calendar local events
+    - [ ] Compute intersection of all calendar events
 - [ ] Include the fonts.
 
 # Create React App stuff below

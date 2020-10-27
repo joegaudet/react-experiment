@@ -25,14 +25,12 @@ function Client({client}) {
     isAuthorized
       ? (
         <li>
-          <p>{client.name} - Authorized</p>
-          <button onClick={() => client.revokeAuthorization()}>Sign Out</button>
+          {client.name} - Authorized <button onClick={() => client.revokeAuthorization()}>Sign Out</button>
         </li>
       )
       : (
         <li>
-          <p>{client.name} - Unauthorized</p>
-          <button onClick={() => client.authorize()}>Authorize</button>
+          {client.name} - Unauthorized <button onClick={() => client.authorize()}>Authorize</button>
         </li>
       )
   );
@@ -41,9 +39,6 @@ function Client({client}) {
 function Clients({clients}) {
   return (
     <div>
-      <h2>
-        Calendar Clients
-      </h2>
       <ul>
         {clients.map((client) => <Client client={client} key={client.name}/>)}
       </ul>

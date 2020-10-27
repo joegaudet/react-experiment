@@ -1,4 +1,4 @@
-import { AbstractClient, API } from './Api';
+import { AbstractClient, API, RdyCalendar, RdyEvent } from './Api';
 import { Log } from '../util/log';
 import dayjs from 'dayjs';
 
@@ -42,35 +42,34 @@ export function transformEvent(event) {
           eventEnd = i === length - 1 ? end : start.add(i, 'day').endOf('day');
         }
 
-        return {
-          id: event.id,
-          allDay: allDay,
-          name: event.summary,
-          start: eventStart,
-          end: eventEnd,
-        }
+        return new RdyEvent(
+          event.id,
+          event.summary,
+          eventStart,
+          eventEnd,
+          allDay
+        )
       });
   } else {
-
     return [
-      {
-        id: event.id,
-        name: event.summary,
-        allDay: allDay,
-        start: allDay ? start.startOf('day') : start,
-        end: allDay ? start.endOf('day') : end,
-      }
-    ];
+      new RdyEvent(
+        event.id,
+        event.summary,
+        allDay ? start.startOf('day') : start,
+        allDay ? start.endOf('day') : end,
+        allDay
+      )
+    ]
   }
 }
 
 export function transformCalendar(calendar) {
-  return {
-    id: calendar.id,
-    name: calendar.summary,
-    color: calendar.backgroundColor,
-    timeZone: calendar.timeZone,
-  }
+  return new RdyCalendar(
+    calendar.id,
+    calendar.summary,
+    calendar.backgroundColor,
+    calendar.timeZone
+  )
 }
 
 export class Google extends AbstractClient {
@@ -120,10 +119,6 @@ export class Google extends AbstractClient {
   }
 
   async loadEvents(calendar) {
-    if (calendar.isLoaded) {
-      return calendar;
-    }
-
     Log.info(`Loading events for calendar id:${calendar.id}`);
 
     const response = await window.gapi.client.calendar.events.list({
@@ -136,12 +131,12 @@ export class Google extends AbstractClient {
       'orderBy': 'startTime'
     });
 
-    return {...calendar, isLoaded: true, events: response.result.items.map(transformEvent).flat()};
+    calendar.events = response.result.items.map(transformEvent).flat()
+    return calendar;
   }
 
   async loadCalendars() {
     const response = await window.gapi.client.calendar.calendarList.list();
-    console.log(JSON.stringify(response.result.items, null, 2));
     return this.calendars = response.result.items.map(transformCalendar);
   }
 
@@ -151,7 +146,6 @@ export class Google extends AbstractClient {
   }
 
   _updateAuthenticatedStatus = async (isAuthorized) => {
-
     if (isAuthorized) {
       await this.load();
     }
